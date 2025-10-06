@@ -78,8 +78,10 @@ If you see DB connection errors:
 
 2) Build settings
 - Base directory: `frontend`
-- Build command: `npm ci && npm run build`
+- Build command: `npm install && npm run build`
 - Publish directory: `frontend/dist`
+
+Tip: The repo includes `netlify.toml` that sets these. If your Netlify UI shows “commandOrigin: ui” in logs, the UI overrides the file. Clear the custom build command in the UI to use `netlify.toml`, or set the UI command to `npm install && npm run build`.
 
 3) Environment variables
 - `VITE_API_BASE` = your Render API base, e.g. `https://notbetreurung-backend.onrender.com/api`

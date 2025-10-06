@@ -3,6 +3,9 @@
 A minimal web app to give away a place for a specific date and let others take it. Frontend is React (Vite), backend is PHP + MySQL.
 
 For full project and API documentation, see `DOCUMENTATION.md`.
+For cloud deploy guides, see:
+- `DEPLOYMENT-NETLIFY-RENDER-PLANETSCALE.md`
+- `DEPLOYMENT-INFINITYFREE-NETLIFY.md`
 
 ## Features
 
@@ -58,6 +61,10 @@ npm run dev
 ```
 
 2. The app runs at `http://localhost:5173` (Vite default). It will call the backend at `http://localhost:8000/api`.
+
+Netlify builds
+- This repo includes `netlify.toml` with `base=frontend`, `publish=dist`, and `command="npm install && npm run build"`.
+- If you configured a build command in the Netlify UI, it overrides the file (you’ll see `commandOrigin: ui` in logs). Either clear the UI command to use `netlify.toml`, or set it to `npm install && npm run build`.
 
 If your backend runs on a different origin, update `API_BASE` in `frontend/src/api.js` and ensure CORS in `backend/public/index.php` allows it.
 
