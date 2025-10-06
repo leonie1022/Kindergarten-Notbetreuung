@@ -1,10 +1,12 @@
 export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
+// Optional CORS proxy, e.g. VITE_CORS_PROXY="https://corsproxy.io/?"
+const CORS_PROXY = import.meta.env.VITE_CORS_PROXY || ''
 
 async function request(path, opts = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
-    ...opts,
-  })
+  // Avoid setting Content-Type by default to reduce preflights.
+  const target = `${API_BASE}${path}`
+  const url = CORS_PROXY ? `${CORS_PROXY}${encodeURIComponent(target)}` : target
+  const res = await fetch(url, opts)
   const text = await res.text()
   let data
   try { data = text ? JSON.parse(text) : null } catch { data = text }
@@ -18,7 +20,17 @@ async function request(path, opts = {}) {
 export const api = {
   getDates: () => request('/dates'),
   getOffers: (dateId) => request(`/offers?date_id=${encodeURIComponent(dateId)}`),
-  createOffer: (payload) => request('/offers', { method: 'POST', body: JSON.stringify(payload) }),
-  takeOffer: (offerId, takerName) => request(`/offers/${offerId}/take`, { method: 'POST', body: JSON.stringify({ taker_name: takerName }) }),
+  // Use x-www-form-urlencoded to avoid preflight; works with cors proxies too.
+  createOffer: ({ date_id, child_name, group }) => request('/offers', {
+    method: 'POST',
+    body: new URLSearchParams({
+      date_id: String(date_id),
+      child_name: String(child_name),
+      group: String(group),
+    }),
+  }),
+  takeOffer: (offerId, takerName) => request(`/offers/${offerId}/take`, {
+    method: 'POST',
+    body: new URLSearchParams({ taker_name: String(takerName) }),
+  }),
 }
-

@@ -29,6 +29,19 @@ function json_input(): array {
     return is_array($data) ? $data : [];
 }
 
+function input_params(): array {
+    // Prefer form-encoded POST to avoid CORS preflight; otherwise use JSON body
+    if (!empty($_POST)) {
+        return $_POST;
+    }
+    // Some servers send content-type with charset; check contains
+    $ct = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (stripos($ct, 'application/x-www-form-urlencoded') !== false) {
+        return $_POST ?? [];
+    }
+    return json_input();
+}
+
 function error_json(string $message, int $status = 400): void {
     http_response_code($status);
     echo json_encode(['error' => $message]);
@@ -77,7 +90,7 @@ if ($method === 'GET' && $uri === '/api/offers') {
 
 // POST /api/offers
 if ($method === 'POST' && $uri === '/api/offers') {
-    $body = json_input();
+    $body = input_params();
     $dateId = (int)($body['date_id'] ?? 0);
     $childName = trim((string)($body['child_name'] ?? ''));
     $group = strtoupper(trim((string)($body['group'] ?? '')));
@@ -110,7 +123,7 @@ if ($method === 'POST' && $uri === '/api/offers') {
 if ($method === 'POST' && preg_match('#^/api/offers/(\d+)/take$#', $uri, $m)) {
     $offerId = (int)$m[1];
     if ($offerId <= 0) error_json('Invalid offer id');
-    $body = json_input();
+    $body = input_params();
     $takerName = trim((string)($body['taker_name'] ?? ''));
     if ($takerName === '') error_json('taker_name required');
 
@@ -129,4 +142,3 @@ if ($method === 'POST' && preg_match('#^/api/offers/(\d+)/take$#', $uri, $m)) {
 }
 
 error_json('Not Found', 404);
-
