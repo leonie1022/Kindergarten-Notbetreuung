@@ -6,3 +6,8 @@
 [build.environment]
   NODE_VERSION = "18"
 
+[[redirects]]
+  from = "/api/*"
+  to = "https://myzzzz.infinityfreeapp.com/api/:splat"
+  status = 200
+  force = true

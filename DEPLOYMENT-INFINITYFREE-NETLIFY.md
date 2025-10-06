@@ -85,10 +85,25 @@ INSERT INTO dates (date_value, label) VALUES
 - Publish directory: `frontend/dist`
 
 2) Environment variables
-- `VITE_API_BASE = https://<your-subdomain>.epizy.com/api`
+- Preferred (proxy via Netlify, no CORS): `VITE_API_BASE = /api`
+- Alternative (direct, requires CORS headers): `VITE_API_BASE = https://<your-subdomain>.epizy.com/api`
 
 3) Deploy
 - After deploy, you get `https://<your-netlify-site>.netlify.app`.
+
+4) Proxy API via Netlify (recommended)
+- Add this to `netlify.toml` at repo root (replace the domain with your InfinityFree subdomain):
+
+```toml
+[[redirects]]
+  from = "/api/*"
+  to = "https://<your-subdomain>.epizy.com/api/:splat"
+  status = 200
+  force = true
+```
+
+- Then set `VITE_API_BASE=/api` in Netlify environment and redeploy.
+  This avoids CORS entirely because the browser calls same-origin `/api/*` and Netlify proxies to InfinityFree.
 
 ## 3) CORS and Domains
 - If you later add a custom domain on Netlify, add it to `CORS_ORIGINS` in `htdocs/config.php` on InfinityFree.
@@ -103,5 +118,5 @@ SELECT id, date_value, label FROM dates ORDER BY date_value;
 
 ## Troubleshooting
 - 404 on `/api/dates`: upload `.htaccess` to `htdocs/api/` and verify rewrites.
-- CORS errors in browser console: confirm your exact Netlify URL is listed in `CORS_ORIGINS`.
+- CORS errors in browser console (when not using proxy): confirm your exact Netlify URL is listed in `CORS_ORIGINS`.
 - PHP errors: check InfinityFree error logs in the Control Panel; ensure PHP 8.0+.
