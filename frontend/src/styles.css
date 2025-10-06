@@ -1,0 +1,61 @@
+:root {
+  --bg: #0b0c10;
+  --card: #12141a;
+  --text: #e8e8e8;
+  --muted: #a3a3a3;
+  --primary: #2ecc71;
+  --primary-600: #27ae60;
+  --danger: #e74c3c;
+  --border: #282a36;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji; }
+.container { max-width: 900px; margin: 0 auto; padding: 24px; }
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.header a { color: var(--text); text-decoration: none; opacity: 0.9; }
+.footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.date-btn { display: inline-block; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; text-align: center; }
+.date-btn:hover { border-color: var(--primary); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.form-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+.form-row label { display: grid; gap: 6px; font-size: 14px; }
+input, select { background: #0f1117; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 16px; }
+button { cursor: pointer; background: var(--primary); color: #001; border: none; border-radius: 10px; padding: 12px 14px; font-weight: 700; font-size: 16px; }
+button:disabled { background: #4b5563; cursor: not-allowed; }
+.error { color: var(--danger); margin-left: 8px; }
+.title-row { display: flex; align-items: center; justify-content: space-between; }
+table.offers { width: 100%; border-collapse: collapse; }
+table.offers th, table.offers td { border-bottom: 1px solid var(--border); padding: 10px; }
+.take-row { display: flex; gap: 8px; }
+.take-btn { background: #22c55e; }
+.taken { color: #9ca3af; font-weight: 600; }
+
+/* Focus visibility for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Mobile-friendly layout */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .grid { grid-template-columns: 1fr; }
+  .date-btn { padding: 16px; font-size: 16px; width: 100%; }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row label { width: 100%; }
+  input, select, button { width: 100%; }
+  .take-row { flex-direction: column; }
+
+  /* Table -> Card layout */
+  table.offers, table.offers thead, table.offers tbody, table.offers th, table.offers td, table.offers tr {
+    display: block;
+    width: 100%;
+  }
+  table.offers thead { display: none; }
+  table.offers tr { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: #0f1117; }
+  table.offers td { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px; }
+  table.offers td:last-child { border-bottom: none; }
+  table.offers td::before { content: attr(data-label); color: var(--muted); font-weight: 600; margin-right: 12px; }
+}
